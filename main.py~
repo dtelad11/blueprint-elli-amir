@@ -1,11 +1,22 @@
 """FastAPI application defining routes for the diagnostic screener and scoring logic."""
 
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from pathlib import Path
+
 from schemas import ScreenerSubmission, AssessmentResult
 from data import load_diagnostic_screener, load_domain_map
 
 
 app = FastAPI()
+app.mount("/", StaticFiles(directory = "frontend/dist", html = True), name="frontend")
+
+
+@app.get("/{full_path:path}")
+def serve_frontend():
+    return FileResponse(Path("frontend/dist/index.html"))
+
 
 # Load the diagnostic screener and domain map from the json file (... or
 # database, or third-party API).

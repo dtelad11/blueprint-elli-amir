@@ -10,11 +10,6 @@ from data import load_diagnostic_screener, load_domain_map
 
 
 app = FastAPI()
-app.mount("/", StaticFiles(directory = "frontend/dist", html = True), name="frontend")
-
-@app.get("/{full_path:path}")
-def serve_frontend():
-    return FileResponse(Path("frontend/dist/index.html"))
 
 
 # Load the diagnostic screener and domain map from the json file (... or
@@ -75,4 +70,14 @@ def score_screener(submission: ScreenerSubmission):
         results.append("ASSIST")
 
     return AssessmentResult(results = results)
+
+
+# Mount the React app and serve it as default route.
+app.mount("/", StaticFiles(directory = "frontend/dist", html = True), name="frontend")
+
+
+@app.get("/{full_path:path}")
+def serve_frontend():
+    return FileResponse(Path("frontend/dist/index.html"))
+
 
