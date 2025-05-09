@@ -88,7 +88,7 @@ def score_screener(submission: ScreenerSubmission):
 
 # Mount the React app and serve it as default route. Not very elegant, but good
 # enough for the exercise.
-app.mount("/", StaticFiles(directory="static/", html = True), name="frontend")
+app.mount("/", StaticFiles(directory="frontend/dist/", html = True), name="frontend")
 
 
 @app.get("/{full_path:path}")
