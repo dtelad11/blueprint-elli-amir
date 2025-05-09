@@ -74,13 +74,11 @@ def score_screener(submission: ScreenerSubmission):
     # module or service layer, using some sort of dynamic data structure rather
     # than hard-coded strings.
     results = []
-    if scores.get("depression", 0) >= 2:
+    if scores.get("depression", 0) >= 2 or scores.get("anxiety", 0) >= 2:
         results.append("PHQ-9")
     if scores.get("mania", 0) >= 2:
         results.append("ASRM")
-    if scores.get("anxiety", 0) >= 2:
-        results.append("PHQ-9")
-    if scores.get("substance_use") >= 1:
+    if scores.get("substance_use", 0) >= 1:
         results.append("ASSIST")
 
     return AssessmentResult(results = results)
