@@ -1,0 +1,6 @@
+{
+	"name": "blueprint-elli-amir",
+	"scripts": {
+		"heroku-postbuild": "cd frontend && npm install && npm run build"
+	}
+}
