@@ -1,1 +1,4 @@
+/frontend/.env
+/frontend/node_modules/
 *~
+*.swp

@@ -1,11 +1,27 @@
+"""FastAPI application defining routes for the diagnostic screener and scoring logic."""
+
 from fastapi import FastAPI, HTTPException
 from schemas import ScreenerSubmission, AssessmentResult
-from data import load_domain_map
+from data import load_diagnostic_screener, load_domain_map
 
 
 app = FastAPI()
-# Load the domain map from the json file (... or database, or third-party API).
+
+# Load the diagnostic screener and domain map from the json file (... or
+# database, or third-party API).
+diagnostic_screener = load_diagnostic_screener()
 domain_map = load_domain_map()
+
+
+@app.get("/screener")
+def get_diagnostic_screener():
+    """
+    Return the Blueprint Diagnostic Screener.
+    """
+    # Elli: For the purpose of the exercise, I'm taking a minimalistic
+    # approach. In a real app we'd have a schema, validate contents, write
+    # tests for this endpoint, et cetera.
+    return diagnostic_screener
 
 
 @app.post("/score", response_model = AssessmentResult)
@@ -48,5 +64,5 @@ def score_screener(submission: ScreenerSubmission):
     if scores.get("substance_use") >= 1:
         results.append("ASSIST")
 
-    return AssessmentResult(result = results)
+    return AssessmentResult(results = results)
 

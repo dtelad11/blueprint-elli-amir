@@ -1,11 +1,37 @@
+"""FastAPI application defining routes for the diagnostic screener and scoring logic."""
+
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from pathlib import Path
+
 from schemas import ScreenerSubmission, AssessmentResult
-from data import load_domain_map
+from data import load_diagnostic_screener, load_domain_map
 
 
 app = FastAPI()
-# Load the domain map from the json file (... or database, or third-party API).
+app.mount("/", StaticFiles(directory = "frontend/dist", html = True), name="frontend")
+
+@app.get("/{full_path:path}")
+def serve_frontend():
+    return FileResponse(Path("frontend/dist/index.html"))
+
+
+# Load the diagnostic screener and domain map from the json file (... or
+# database, or third-party API).
+diagnostic_screener = load_diagnostic_screener()
 domain_map = load_domain_map()
+
+
+@app.get("/screener")
+def get_diagnostic_screener():
+    """
+    Return the Blueprint Diagnostic Screener.
+    """
+    # Elli: For the purpose of the exercise, I'm taking a minimalistic
+    # approach. In a real app we'd have a schema, validate contents, write
+    # tests for this endpoint, et cetera.
+    return diagnostic_screener
 
 
 @app.post("/score", response_model = AssessmentResult)
