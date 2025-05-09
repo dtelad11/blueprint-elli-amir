@@ -1,8 +1,52 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from schemas import ScreenerSubmission, AssessmentResult
+from data import load_domain_map
+
 
 app = FastAPI()
+# Load the domain map from the json file (... or database, or third-party API).
+domain_map = load_domain_map()
 
-@app.get("/")
-def read_root():
-    return {"hello": "world"}
+
+@app.post("/score", response_model = AssessmentResult)
+def score_screener(submission: ScreenerSubmission):
+    """
+    Process a screener submission with patient's answers and return recommended Level-2 results.
+    """
+    # Make sure that all question ids belong to one of the domains.
+    invalid_question_ids = [
+        answer.question_id for answer in submission.answers
+        if answer.question_id not in domain_map
+    ]
+    if invalid_question_ids:
+        raise HTTPException(
+            status_code = 400,
+            detail="Invalid question_ids(s): " + ', '.join(invalid_question_ids)
+        )
+
+    # Elli: Additional data validation could go here, for example, making sure
+    # that all expected question IDs are present. If this logic grows, we
+    # should extract it to a `validate_screener()` helper function.
+
+    # Aggregate scores.
+    scores = {}
+    for answer in submission.answers:
+        domain = domain_map.get(answer.question_id)
+        scores[domain] = scores.get(domain, 0) + answer.value
+
+    # Determine which Level-2 Assessments to assign based on each domain's score.
+    # Elli: In a real app, this scoring logic would likely live in a separate
+    # module or service layer, using some sort of dynamic data structure rather
+    # than hard-coded strings.
+    results = []
+    if scores.get("depression", 0) >= 2:
+        results.append("PHQ-9")
+    if scores.get("mania", 0) >= 2:
+        results.append("ASRM")
+    if scores.get("anxiety", 0) >= 2:
+        results.append("PHQ-9")
+    if scores.get("substance_use") >= 1:
+        results.append("ASSIST")
+
+    return AssessmentResult(results = results)
 
