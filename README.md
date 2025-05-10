@@ -28,6 +28,8 @@ In order to ease deployment, submission, and your review, I went for a single re
 
 ### Production Deployment Strategy
 
+There are several steps that I would take before deploying this as a true production app.
+
 - **Performance & Availability**  
   Move scoring and data storage to background jobs/workers. Manage workers via a load balancer (such as AWS Elastic Beanstalk). Serve the frontend separately from the backend.
 
