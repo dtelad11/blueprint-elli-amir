@@ -18,6 +18,8 @@ The backend is written in Python with FastAPI, using Pydantic models for input v
 
 The frontend is built with React, and is served as static content via FastAPI. Users progress through the screener one question at a time, with responses submitted to the backend upon completion.
 
+The suggested assessments appear in the console once the last question is answered.
+
 ### Technical Choices
 
 Full disclosure, I chose this stack since I have prior experience setting it up on Heroku, saving on DevOps time. With that said:
