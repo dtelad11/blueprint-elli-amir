@@ -14,7 +14,7 @@ Build a two-part application:
 
 ### Solution Overview
 
-The backend is written in Python with FastAPI, using Pydantic models for input validation. Static data (such as the domain map) is stored as JSON and loaded at runtime. The `/score` endpoint calculates domain scores and returns a list of recommended assessments.
+The backend is written in Python with FastAPI, using Pydantic models for input validation. Static data (such as the domain map) is stored as JSON and loaded at runtime. The `/score` endpoint calculates domain scores and returns a list of recommended assessments. Unit tests are written using pytest.
 
 The frontend is built with React, and is served as static content via FastAPI. Users progress through the screener one question at a time, with responses submitted to the backend upon completion.
 
@@ -48,11 +48,11 @@ I made quite a few decisions to guarantee that I can deliver the project within 
 - Domain map and screener are read from static JSON files instead of a database.
 - Frontend is JS, not TypeScript (especially relevant for incoming data).
 - Skipped client-side validation and user authentication.
-- There are no backend tests.
+- There are no frontend tests.
 
 Given more time, I would start by splitting the deployment and hosting the frontend separately from the backend.
 
-Next, I would add strict typing to the frontend for safer API integration and introduce unit tests for the backend and potentially the frontend. I would move the scoring logic to a dedicated service layer, which would ideally be more dynamic (relying on a database instead of hard-coding strings and rules). Lastly, I would add error handling via logging, retry logic, and user-friendly errors on the frontend.
+Next, I would add strict typing and unit tests to the frontend for safer API integration. I would move the scoring logic to a dedicated service layer, which would ideally be more dynamic (relying on a database instead of hard-coding strings and rules). Lastly, I would add error handling via logging, retry logic, and user-friendly errors on the frontend.
 
 ### LinkedIn
 

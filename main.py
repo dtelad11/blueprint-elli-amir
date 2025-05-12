@@ -56,7 +56,7 @@ def score_screener(submission: ScreenerSubmission):
     if invalid_question_ids:
         raise HTTPException(
             status_code=400,
-            detail="Invalid question_ids(s): " + ', '.join(invalid_question_ids)
+            detail="Invalid question_id(s): " + ', '.join(invalid_question_ids)
         )
 
     # Elli: Additional data validation could go here, for example, making sure
